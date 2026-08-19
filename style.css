@@ -1,3 +1,15 @@
+#sketch-container{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#button{
+    display: block;
+    margin: 0 auto;
+}
+
 #grid-container{
     display: flex;
     flex-wrap: wrap;
