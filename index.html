@@ -4,18 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
+    <!-- using the Tailwind CDN for now, docs said this is fine for quick projects -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="myscript.js" defer></script>
 
     <title>My Project</title>
 </head>
-<body>
-    <div id="sketch-container">
-        <button id="button">New Grid</button>
+<body class="min-h-screen bg-gray-100">
 
-        <div id="grid-container">
-        <!-- Grid location using JS -->
+    <div id="sketch-container" class="p-5 flex flex-col gap-5">
+
+        <button id="button" class="block mx-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
+            New Grid
+        </button>
+
+        <div id="grid-container" class="flex flex-wrap w-[80vw] max-w-[640px] aspect-square mx-auto border border-gray-400">
+            <!-- Grid location using JS -->
         </div>
+
     </div>
+
 </body>
 </html>
