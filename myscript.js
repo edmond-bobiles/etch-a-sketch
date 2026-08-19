@@ -9,7 +9,7 @@ let numberOfSquares = 16;
 // Default sketch pad
 makeGrid(numberOfSquares);
 
-// Sketchpad maker
+// Create grid
 function makeGrid(numberOfSquares){
     for (let i=0; i<numberOfSquares; i++){
         for (let j=0; j<numberOfSquares; j++){
@@ -26,6 +26,7 @@ function makeGrid(numberOfSquares){
 
 }
 
+// Remove current grid
 function removeGrid(){
     gridContainer.textContent = "";
 }
@@ -36,16 +37,19 @@ button.addEventListener("click", () => {
     const popup = document.createElement("div");
 
     const input = document.createElement("input");
+    const errorMessage = document.createElement("p");
+
     const acceptButton = document.createElement("button");
     const cancelButton = document.createElement("button");
 
     popupScreen.classList.add("popup-screen");
     popup.classList.add("popup");
+    errorMessage.classList.add("error-message");
 
     // Input values
     input.type = "number";
     input.placeholder = "Enter grid size";
-    input.value = 16;
+    input.value = numberOfSquares;
     input.min = 1;
     input.max = 100;
 
@@ -53,16 +57,20 @@ button.addEventListener("click", () => {
     acceptButton.textContent = "Accept";
     cancelButton.textContent = "Cancel";
 
+    // Error message
+    errorMessage.textContent = "";
+
     acceptButton.addEventListener("click", () => {
         numberOfSquares = Number(input.value);
-        if (numberOfSquares > 0 && numberOfSquares < 101){
+
+        if (numberOfSquares >= 1 && numberOfSquares <= 100){
             removeGrid();
             makeGrid(numberOfSquares);
             popupScreen.remove();
         }
 
         else {
-            popupScreen.remove();
+            errorMessage.textContent = "Please enter a number between 1 and 100.";
         }
     });
     cancelButton.addEventListener("click", () => {
@@ -71,6 +79,7 @@ button.addEventListener("click", () => {
 
     // sketch-container -> popupscreen -> popup -> input, accept, cancel 
     popup.appendChild(input);
+    popup.appendChild(errorMessage);
     popup.appendChild(acceptButton);
     popup.appendChild(cancelButton);
 
