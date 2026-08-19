@@ -39,33 +39,37 @@ button.addEventListener("click", () => {
     const acceptButton = document.createElement("button");
     const cancelButton = document.createElement("button");
 
-    
     popupScreen.classList.add("popup-screen");
     popup.classList.add("popup");
 
-    // popup -> input, accept, cancel 
-
+    // Input values
     input.type = "number";
     input.placeholder = "Enter grid size";
     input.value = 16;
     input.min = 1;
     input.max = 100;
 
+    // Buttons
     acceptButton.textContent = "Accept";
     cancelButton.textContent = "Cancel";
 
     acceptButton.addEventListener("click", () => {
-        removeGrid();
         numberOfSquares = Number(input.value);
-        makeGrid(numberOfSquares);
-   
-        popupScreen.remove();
-    });
+        if (numberOfSquares > 0 && numberOfSquares < 101){
+            removeGrid();
+            makeGrid(numberOfSquares);
+            popupScreen.remove();
+        }
 
+        else {
+            popupScreen.remove();
+        }
+    });
     cancelButton.addEventListener("click", () => {
         popupScreen.remove();
     });
 
+    // sketch-container -> popupscreen -> popup -> input, accept, cancel 
     popup.appendChild(input);
     popup.appendChild(acceptButton);
     popup.appendChild(cancelButton);
@@ -74,7 +78,6 @@ button.addEventListener("click", () => {
 
     sketchContainer.appendChild(popupScreen);
 
- 
 });
 
 
