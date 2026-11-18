@@ -3,26 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- using the Tailwind CDN for now, docs said this is fine for quick projects -->
+    <meta name="theme-color" content="#f8fafc">
+    <title>Etch-a-Sketch</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="myscript.js" defer></script>
-
-    <title>My Project</title>
 </head>
-<body class="min-h-screen bg-gray-100">
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+    <main id="sketch-container" class="mx-auto flex max-w-3xl flex-col px-5 py-4 sm:px-8 sm:py-6">
+        <header class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Etch-a-Sketch</h1>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Move across the grid and see what takes shape.</p>
+            </div>
+            <div class="flex gap-2">
+                <button id="clear-button" type="button" class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Clear</button>
+                <button id="button" type="button" class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">New grid</button>
+            </div>
+        </header>
 
-    <div id="sketch-container" class="p-5 flex flex-col gap-5">
+        <section aria-label="Sketch pad" class="mx-auto w-full max-w-[min(100%,calc(100dvh-280px))] rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:max-w-[min(100%,calc(100dvh-230px))] sm:p-5">
+            <div class="mb-3 flex items-center justify-between gap-3 text-xs font-medium text-slate-500">
+                <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-blue-600"></span> Drawing in blue</span>
+                <span id="grid-size">16 × 16</span>
+            </div>
+            <div id="grid-container" aria-label="Drawing grid" class="grid aspect-square w-full overflow-hidden rounded-lg border border-slate-200 bg-white touch-none"></div>
+        </section>
+        <p class="mt-3 text-center text-xs leading-5 text-slate-400">Hover or drag across the squares to draw. Start fresh whenever you like.</p>
+    </main>
 
-        <button id="button" class="block mx-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
-            New Grid
-        </button>
-
-        <div id="grid-container" class="flex flex-wrap w-[80vw] max-w-[640px] aspect-square mx-auto border border-gray-400">
-            <!-- Grid location using JS -->
-        </div>
-
-    </div>
-
+    <dialog id="grid-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description" class="w-[calc(100%-2rem)] max-w-sm rounded-2xl p-0 text-slate-800 shadow-xl backdrop:bg-slate-900/50">
+        <form id="grid-form" class="p-6" novalidate>
+            <h2 id="dialog-title" class="text-xl font-bold tracking-tight text-slate-900">Create a new grid</h2>
+            <p id="dialog-description" class="mt-2 text-sm leading-6 text-slate-500">Choose the number of squares per side. This will clear your current drawing.</p>
+            <label for="grid-input" class="mt-5 block text-sm font-semibold text-slate-700">Grid size</label>
+            <input id="grid-input" type="number" min="1" max="100" step="1" required class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+            <p class="mt-2 text-xs text-slate-500">Enter a whole number from 1 to 100.</p>
+            <p id="grid-error" role="alert" class="mt-2 text-sm text-red-600"></p>
+            <div class="mt-6 flex justify-end gap-2">
+                <button id="cancel-button" type="button" class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Cancel</button>
+                <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Create grid</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>

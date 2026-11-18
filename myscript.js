@@ -1,117 +1,73 @@
-// DOM element references
-const sketchContainer = document.querySelector("#sketch-container");
 const gridContainer = document.querySelector("#grid-container");
-const button = document.querySelector("#button");
+const gridSize = document.querySelector("#grid-size");
+const newGridButton = document.querySelector("#button");
+const clearButton = document.querySelector("#clear-button");
+const dialog = document.querySelector("#grid-dialog");
+const form = document.querySelector("#grid-form");
+const input = document.querySelector("#grid-input");
+const error = document.querySelector("#grid-error");
+const cancelButton = document.querySelector("#cancel-button");
 
-// Default grid size
 let numberOfSquares = 16;
 
-// Default sketch pad
-makeGrid(numberOfSquares);
+function makeGrid(size) {
+    const squares = document.createDocumentFragment();
+    gridContainer.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+    gridContainer.style.gridTemplateRows = `repeat(${size}, minmax(0, 1fr))`;
 
-// Create grid
-function makeGrid(numberOfSquares) {
-    for (let i = 0; i < numberOfSquares; i++) {
-        for (let j = 0; j < numberOfSquares; j++) {
-            const gridSquare = document.createElement("div");
-            // aspect-square + border, had to look up "box-sizing" equivalent -> border-box is default in Tailwind's preflight
-            gridSquare.classList.add("aspect-square", "border", "border-gray-400", "box-border");
+    for (let i = 0; i < size * size; i++) {
+        const square = document.createElement("div");
+        square.className = "border-[0.5px] border-slate-100";
+        squares.appendChild(square);
+    }
 
-            const squareSize = 100 / numberOfSquares;
-            gridSquare.style.flexBasis = squareSize + "%";
+    gridContainer.replaceChildren(squares);
+    gridSize.textContent = `${size} × ${size}`;
+}
 
-            gridSquare.addEventListener("mouseover", () => {
-                gridSquare.classList.add("bg-blue-600");
-            });
-
-            gridContainer.appendChild(gridSquare);
-        }
+function paintSquare(target) {
+    if (target.parentElement === gridContainer) {
+        target.classList.add("bg-blue-600");
     }
 }
 
-// Remove current grid
-function removeGrid() {
-    gridContainer.textContent = "";
-}
-
-// Change grid size using button with popup screen
-button.addEventListener("click", () => {
-    const popupScreen = document.createElement("div");
-    const popup = document.createElement("div");
-
-    const input = document.createElement("input");
-    const errorMessage = document.createElement("p");
-
-    const acceptButton = document.createElement("button");
-    const cancelButton = document.createElement("button");
-
-    // popup-screen: fixed overlay covering the whole page, dark background
-    // "inset-0" was new to me, docs say it's shorthand for top/right/bottom/left: 0
-    popupScreen.classList.add(
-        "fixed", "inset-0", "bg-black/50",
-        "flex", "justify-center", "items-center"
-    );
-
-    // popup: the white card in the middle
-    popup.classList.add(
-        "bg-white", "p-8", "rounded-lg", "shadow-lg",
-        "flex", "flex-col", "gap-3", "w-64"
-    );
-
-    // error-message
-    errorMessage.classList.add("m-0", "text-red-500", "text-sm", "text-center");
-
-    // Input values
-    input.type = "number";
-    input.placeholder = "Enter grid size";
-    input.value = numberOfSquares;
-    input.min = 1;
-    input.max = 100;
-    // basic input styling, still not 100% sure about all the focus: variants but this looked decent
-    input.classList.add(
-        "border", "border-gray-300", "rounded", "px-3", "py-2",
-        "focus:outline-none", "focus:ring-2", "focus:ring-blue-400", "text-center"
-    );
-
-    // Buttons
-    acceptButton.textContent = "Accept";
-    acceptButton.classList.add(
-        "bg-blue-500", "hover:bg-blue-600", "text-white",
-        "font-semibold", "px-3", "py-2", "rounded", "transition"
-    );
-
-    cancelButton.textContent = "Cancel";
-    cancelButton.classList.add(
-        "bg-gray-200", "hover:bg-gray-300", "text-gray-800",
-        "font-semibold", "px-3", "py-2", "rounded", "transition"
-    );
-
-    // Error message
-    errorMessage.textContent = "";
-
-    acceptButton.addEventListener("click", () => {
-        numberOfSquares = Number(input.value);
-
-        if (numberOfSquares >= 1 && numberOfSquares <= 100) {
-            removeGrid();
-            makeGrid(numberOfSquares);
-            popupScreen.remove();
-        } else {
-            errorMessage.textContent = "Please enter a number between 1 and 100.";
-        }
-    });
-
-    cancelButton.addEventListener("click", () => {
-        popupScreen.remove();
-    });
-
-    // sketch-container -> popupscreen -> popup -> input, error, accept, cancel
-    popup.appendChild(input);
-    popup.appendChild(errorMessage); // <-- this was missing before, that's why the error never showed!
-    popup.appendChild(acceptButton);
-    popup.appendChild(cancelButton);
-
-    popupScreen.appendChild(popup);
-
-    sketchContainer.appendChild(popupScreen);
+gridContainer.addEventListener("pointerover", (event) => {
+    if (event.pointerType === "mouse" || event.buttons > 0) paintSquare(event.target);
 });
+
+gridContainer.addEventListener("pointerdown", (event) => {
+    paintSquare(event.target);
+});
+
+// Touch pointers retain their original target while moving, so find the square under the finger.
+gridContainer.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse" && event.buttons > 0) {
+        paintSquare(document.elementFromPoint(event.clientX, event.clientY) || gridContainer);
+    }
+});
+
+clearButton.addEventListener("click", () => makeGrid(numberOfSquares));
+newGridButton.addEventListener("click", () => {
+    input.value = numberOfSquares;
+    error.textContent = "";
+    input.removeAttribute("aria-invalid");
+    dialog.showModal();
+    input.focus();
+    input.select();
+});
+cancelButton.addEventListener("click", () => dialog.close());
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const size = Number(input.value);
+    if (!input.value || !Number.isInteger(size) || size < 1 || size > 100) {
+        error.textContent = "Please enter a whole number between 1 and 100.";
+        input.setAttribute("aria-invalid", "true");
+        input.focus();
+        return;
+    }
+    numberOfSquares = size;
+    makeGrid(size);
+    dialog.close();
+});
+
+makeGrid(numberOfSquares);
