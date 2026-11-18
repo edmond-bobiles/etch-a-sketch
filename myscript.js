@@ -1,5 +1,6 @@
 const gridContainer = document.querySelector("#grid-container");
 const gridSize = document.querySelector("#grid-size");
+const drawingColor = document.querySelector("#drawing-color");
 const newGridButton = document.querySelector("#button");
 const clearButton = document.querySelector("#clear-button");
 const dialog = document.querySelector("#grid-dialog");
@@ -27,7 +28,7 @@ function makeGrid(size) {
 
 function paintSquare(target) {
     if (target.parentElement === gridContainer) {
-        target.classList.add("bg-blue-600");
+        target.style.backgroundColor = drawingColor.value;
     }
 }
 

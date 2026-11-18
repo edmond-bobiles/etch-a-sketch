@@ -1,6 +1,6 @@
 # Etch-a-Sketch
 
-A browser-based sketch pad built for [The Odin Project](https://www.theodinproject.com/). Move the pointer or drag across the grid to color squares blue.
+A browser-based sketch pad built for [The Odin Project](https://www.theodinproject.com/). Move the pointer or drag across the grid to color squares.
 
 ## Getting started
 
@@ -13,7 +13,7 @@ cd etch-a-sketch
 
 ## Usage
 
-The initial grid is 16 by 16 squares. Select **New grid**, enter a whole number from 1 to 100, and select **Create grid** to create a fresh square grid. Select **Cancel** to keep the current grid, or **Clear** to erase it without changing its size.
+The initial grid is 16 by 16 squares. Use the color picker above the grid to choose a drawing color. Select **New grid**, enter a whole number from 1 to 100, and select **Create grid** to create a fresh square grid. Select **Cancel** to keep the current grid, or **Clear** to erase it without changing its size.
 
 ## Built with
 
